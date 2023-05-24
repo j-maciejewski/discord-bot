@@ -1,0 +1,36 @@
+{
+  "name": "discord-bot",
+  "description": "Application for private discord server",
+  "private": true,
+  "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "@jadestudios/discord-music-player": "^9.1.1-az23",
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.0.3",
+    "sharp": "^0.32.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-import-resolver-typescript": "^2.7.0",
+    "eslint-plugin-formatjs": "^3.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
+    "pretty-quick": "^3.1.3",
+    "typescript": "^5.0.4"
+  },
+  "overrides": {
+    "ytsr": "github:Yonle/node-ytsr"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint ./src",
+    "lint:changed": "npm run lint -- --cache --fix"
+  }
+}
