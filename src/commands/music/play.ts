@@ -2,6 +2,8 @@ import { ApplicationCommandOptionType, GuildMember } from 'discord.js'
 
 import { Commands } from '../../consts'
 import { type ICommand } from '../../types'
+import ytsr, { Video } from "ytsr"
+import { isVideo } from "../../utils"
 
 const play: ICommand = {
   name: Commands.PLAY,
@@ -11,8 +13,8 @@ const play: ICommand = {
       name: 'song',
       description: 'Link to a song',
       type: ApplicationCommandOptionType.String,
-      required: true
-    }
+      required: true,
+    },
   ],
   run: async (interaction) => {
     const { options, guildId, member, client } = interaction
@@ -24,24 +26,32 @@ const play: ICommand = {
       return
     }
 
-    const songLink = options.getString('song')
+    let songLink = options.getString('song')
+
+    await interaction.deferReply()
+
+
+    if (!songLink.startsWith('https://') && !songLink.startsWith('http://')) {
+      const searchResults = await ytsr(songLink, { limit: 10 })
+      const video = searchResults.items.find(item => isVideo(item)) as Video
+      songLink = video.url
+    }
 
     const queue = client.player.createQueue(guildId)
 
     await queue.join(member.voice.channel)
 
-    await interaction.deferReply()
-
-    queue.play(songLink)
-      .then(async song => {
-        await interaction.editReply(`Song **${song.name}** added to queue 🤙🎶`)
+    queue
+      .play(songLink)
+      .then(async (song) => {
+        await interaction.editReply(`**${song.name}** added to queue 🤙🎶`)
       })
       .catch(async (err) => {
         if (!interaction.replied) await interaction.editReply('There was an error while playing your song')
 
         console.log(err)
       })
-  }
+  },
 }
 
 export { play }

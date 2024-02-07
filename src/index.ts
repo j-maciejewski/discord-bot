@@ -8,9 +8,9 @@ import { DiscordClient } from './client'
 
 dotenv.config()
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
 
-(async () => {
+;(async () => {
   try {
     console.log('Started refreshing application (/) commands.')
 
@@ -30,13 +30,13 @@ const client = new DiscordClient({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildMessageReactions
-  ]
+    GatewayIntentBits.GuildMessageReactions,
+  ],
 })
 
 playerListenersSetup(client)
 
-Object.values(events).forEach(event => {
+Object.values(events).forEach((event) => {
   client.on(event.name, (...args) => {
     // @ts-expect-error
     event.execute(...args)

@@ -1,4 +1,5 @@
 import { appendFile } from 'fs'
+import { join } from 'path'
 
 export const logError = (errorMessage: string, data: any = {}) => {
   const currentDate = new Date()
@@ -7,12 +8,16 @@ export const logError = (errorMessage: string, data: any = {}) => {
   const date = currentDate.toLocaleDateString('en-GB', {
     year: 'numeric',
     month: '2-digit',
-    day: '2-digit'
+    day: '2-digit',
   })
 
-  const content = `[${time} ${date}] ${errorMessage} ${JSON.stringify(data)}\n`
+  const content = `[${time} ${date}] ${errorMessage} ${JSON.stringify(data, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value,
+  )}`
 
-  appendFile('./logs/errors.log', content, (err) => {
+  const logPath = join(__dirname, '..', '..', 'logs', 'errors.log')
+
+  appendFile(logPath, content, (err) => {
     if (err) {
       console.log('Error ocured while saving error')
       return

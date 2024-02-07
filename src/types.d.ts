@@ -3,7 +3,7 @@ import {
   type ApplicationCommandOption,
   type ChatInputCommandInteraction,
   type ClientEvents,
-  type Collection
+  type Collection,
 } from 'discord.js'
 
 import { highEloTiers, type Commands, lowEloRanks, lowEloTiers } from './consts'
@@ -85,6 +85,8 @@ interface LeagueMatch {
       item6: number
       summoner1Id: number
       summoner2Id: number
+      totalDamageDealtToChampions: number
+      teamId: number
     }>
   }
 }
@@ -98,6 +100,7 @@ interface FormattedLeagueMatch {
   win: boolean
   player: FullPlayerData
   premades: PlayerData[]
+  totalDamageInTeam: number
 }
 
 interface LeagueSpell {
@@ -117,4 +120,5 @@ interface PlayerData {
 interface FullPlayerData extends PlayerData {
   items: number[]
   summoners: number[]
+  damageDealt: number
 }

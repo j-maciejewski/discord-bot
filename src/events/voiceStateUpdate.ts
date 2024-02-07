@@ -12,6 +12,10 @@ const voiceStateUpdate: ClientEventHandler<Events.VoiceStateUpdate> = {
   execute: async (oldState, newState) => {
     if (newState.id !== Users.JACA) return
 
+    const guildQueue = oldState.client.player.getQueue(oldState.guild.id)
+
+    if (guildQueue) return
+
     try {
       const newUserChannel = newState.channelId
       const oldUserChannel = oldState.channelId
@@ -22,7 +26,7 @@ const voiceStateUpdate: ClientEventHandler<Events.VoiceStateUpdate> = {
         const connection = joinVoiceChannel({
           channelId: newState.channelId,
           guildId: newState.guild.id,
-          adapterCreator: newState.guild.voiceAdapterCreator
+          adapterCreator: newState.guild.voiceAdapterCreator,
         })
 
         connection.subscribe(player)
@@ -43,7 +47,7 @@ const voiceStateUpdate: ClientEventHandler<Events.VoiceStateUpdate> = {
         logError(error.message, { oldState, newState })
       }
     }
-  }
+  },
 }
 
 export { voiceStateUpdate }

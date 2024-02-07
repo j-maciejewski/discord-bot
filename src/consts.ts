@@ -1,4 +1,4 @@
-export const lowEloTiers = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND'] as const
+export const lowEloTiers = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND'] as const
 export const lowEloRanks = ['I', 'II', 'III', 'IV'] as const
 export const highEloTiers = ['MASTER', 'GRANDMASTER', 'CHALLENGER'] as const
 
@@ -18,4 +18,5 @@ export enum Commands {
   SHUFFLE = 'shuffle',
   SKIP = 'skip',
   STOP = 'stop',
+  SEARCH = 'search',
 }

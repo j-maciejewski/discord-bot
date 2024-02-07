@@ -1,8 +1,9 @@
 import { type Queue, RepeatMode } from '@jadestudios/discord-music-player'
-import { EmbedBuilder } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js'
 
 import { Commands } from '../../consts'
 import { type ICommand } from '../../types'
+import { shuffleScript, skipScript } from '../../utils'
 
 const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
   const embed = new EmbedBuilder()
@@ -13,10 +14,8 @@ const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
       .setTitle('Now playing')
       .setDescription(
         `${guildQueue.songs[0].name} [${
-          guildQueue.songs[0].isLive && guildQueue.songs[0].duration === '00:00'
-            ? 'LIVE'
-            : guildQueue.songs[0].duration
-        }]`
+          guildQueue.songs[0].isLive && guildQueue.songs[0].duration === '00:00' ? 'LIVE' : guildQueue.songs[0].duration
+        }]`,
       )
       .setImage(guildQueue.songs[0].thumbnail)
 
@@ -27,11 +26,7 @@ const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
           .slice(1)
           .map(
             (song, idx) =>
-              `${idx + 1}. ${song.name} [${
-                song.isLive && song.duration === '00:00'
-                  ? 'LIVE'
-                  : song.duration
-              }]`
+              `${idx + 1}. ${song.name} [${song.isLive && song.duration === '00:00' ? 'LIVE' : song.duration}]`,
           )
           .join('\n')
       } else {
@@ -39,11 +34,7 @@ const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
           .slice(1, 16)
           .map(
             (song, idx) =>
-              `${idx + 1}. ${song.name} [${
-                song.isLive && song.duration === '00:00'
-                  ? 'LIVE'
-                  : song.duration
-              }]`
+              `${idx + 1}. ${song.name} [${song.isLive && song.duration === '00:00' ? 'LIVE' : song.duration}]`,
           )
           .join('\n')
         queueMessage += `\nand ${guildQueue.songs.length - 16} more...`
@@ -51,7 +42,7 @@ const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
 
       embed.addFields({
         name: 'Queue',
-        value: queueMessage
+        value: queueMessage,
       })
     }
 
@@ -60,7 +51,9 @@ const buildPlayerMessage = (guildQueue: Queue): EmbedBuilder => {
     if (guildQueue.connection.paused) footer.push('Paused')
 
     if (guildQueue.repeatMode === RepeatMode.SONG) footer.push('Looping: song')
-    else if (guildQueue.repeatMode === RepeatMode.QUEUE) { footer.push('Looping: queue') }
+    else if (guildQueue.repeatMode === RepeatMode.QUEUE) {
+      footer.push('Looping: queue')
+    }
 
     if (footer.length > 0) embed.setFooter({ text: footer.join(' | ') })
   } else {
@@ -84,7 +77,36 @@ const queue: ICommand = {
     const embed = buildPlayerMessage(guildQueue)
 
     await interaction.reply({ embeds: [embed] })
-  }
+
+    // const buttons = [
+    //   new ButtonBuilder().setCustomId('refresh').setLabel('🔄').setStyle(ButtonStyle.Secondary),
+    //   new ButtonBuilder().setCustomId('shuffle').setLabel('🔀').setStyle(ButtonStyle.Secondary),
+    //   new ButtonBuilder().setCustomId('skip').setLabel('⏩').setStyle(ButtonStyle.Secondary),
+    // ]
+
+    // const row = new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons)
+
+    // await interaction.reply({ embeds: [embed], components: [row] })
+
+    // const collector = interaction.channel.createMessageComponentCollector()
+    // collector.on('collect', async (i) => {
+    //   if (i.customId === 'refresh') {
+    //     const embed = buildPlayerMessage(guildQueue)
+
+    //     await i.update({ embeds: [embed] })
+    //   } else if (i.customId === 'shuffle') {
+    //     shuffleScript(interaction)
+    //     const embed = buildPlayerMessage(guildQueue)
+
+    //     await i.update({ embeds: [embed] })
+    //   } else if (i.customId === 'skip') {
+    //     await skipScript(interaction)
+    //     const embed = buildPlayerMessage(guildQueue)
+
+    //     await i.update({ embeds: [embed] })
+    //   }
+    // })
+  },
 }
 
 export { queue }
